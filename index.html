@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            width: 300px;
+            max-height: 500px;
+            margin: 20px auto;
+        }
+
+        #main {
+            background-color: bisque;
+            min-height: 100px;
+            overflow: auto;
+        }
+
+        .text-editor {
+            width: 300px;
+            max-height: 400px;
+            border: 0 none white;
+            overflow: hidden;
+            padding: 0;
+            outline: none;
+            background-color: #D0D0D0;
+        }
+
+        .left-text {
+            background-color: cadetblue;
+            max-width: 100px;
+            padding: 10px;
+            float: left;
+            border-radius: 15px 15px 15px 0px;
+        }
+
+        .right-text {
+            background-color: lightblue;
+            max-width: 100px;
+            padding: 10px;
+            float: right;
+            border-radius: 15px 15px 0px 15px;
+        }
+
+        .text-row {
+            overflow: hidden;
+            padding: 15px 15px;
+            margin: 10px 0;
+        }
+
+        .text-row p {
+            -webkit-box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.5);
+            -moz-box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.5);
+            box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body onload="init();">
+    <div id="container">
+        <div id="main">
+            <div class="text-row">
+                <p class="left-text">Hey!</p>
+            </div>
+            <div class="text-row">
+                <p class="right-text">Hi!</p>
+            </div>
+            <div class="text-row">
+                <p class="left-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Beatae, quis!</p>
+            </div>
+            <div class="text-row">
+                <p class="right-text">Xin chao</p>
+            </div>
+        </div>
+        <textarea class="text-editor" rows="1" id="editor">Text multiple lines here ...</textarea>
+    </div>
+
+    <script>
+        var observe;
+        if (window.attachEvent) {
+            observe = function (element, event, handler) {
+                element.attachEvent('on' + event, handler);
+            };
+        }
+        else {
+            observe = function (element, event, handler) {
+                element.addEventListener(event, handler, false);
+            };
+        }
+        function init() {
+            var text = document.getElementById('editor');
+            var content = document.getElementById('main');
+
+            function resize() {
+                text.style.height = '100px';
+                text.style.height = text.scrollHeight + 'px';
+                content.style.height = 500 - text.scrollHeight + 'px';
+                // console.log(text.style.height);
+                // console.log(content.style.height);
+            }
+
+            /* 0-timeout to get the already changed text */
+            function delayedResize() {
+                window.setTimeout(resize, 0);
+            }
+
+            observe(text, 'change', resize);
+            observe(text, 'cut', delayedResize);
+            observe(text, 'paste', delayedResize);
+            observe(text, 'drop', delayedResize);
+            observe(text, 'keydown', delayedResize);
+
+            text.focus();
+            text.select();
+            resize();
+        }
+    </script>
+</body>
+
+</html>
